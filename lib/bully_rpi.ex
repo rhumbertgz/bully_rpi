@@ -7,14 +7,11 @@ defmodule BullyRPi do
   @interface :eth0
 
   def start(_type, _args) do
-    Leds.set [{:green, true}]
-
     unless :os.type == {:unix, :darwin} do     # don't start networking unless we're on nerves
       {:ok, _} = Networking.setup @interface
     end
-    :timer.sleep 2000
-    # spawn fn -> RPiNode.start_node() end
-    Leds.set [{:green, false}]
+
+    GenNode.start(__MODULE__) # start a new distributed node
 
     {:ok, self()}
   end
